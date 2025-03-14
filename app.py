@@ -1,8 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 import os
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 app.secret_key = 'your-secret-key-here'  # Required for flash messages
 
 # Simulated storage (in a real app, this would be a database)
@@ -11,6 +11,10 @@ files = []
 @app.route('/')
 def index():
     return render_template('index.html', files=files)
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
